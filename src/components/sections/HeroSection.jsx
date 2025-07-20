@@ -6,7 +6,7 @@ import { achievements } from '../../data/achievements';
 
 const HeroSection = () => {
     return (
-        <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 md:pt-0">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-teal-500">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-teal-400/30"></div>
                 {/* Animated Background Elements */}
@@ -46,7 +46,7 @@ const HeroSection = () => {
                     ))}
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-4">
+                <div className="flex flex-wrap justify-center gap-4 mb-16 md:mb-0">
                     <a
                         href="#about"
                         className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105"
