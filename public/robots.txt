@@ -1,3 +1,28 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://anikbakht.ir/sitemap.xml
+
+# Block access to source maps and build files
+Disallow: /*.map$
+Disallow: /static/
+
+# Allow important assets
+Allow: /static/css/
+Allow: /static/js/
+Allow: /static/media/
+
+# Crawl delay for polite bots
+Crawl-delay: 1
+
+# Popular search engine bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: YandexBot
+Allow: /

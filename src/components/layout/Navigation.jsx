@@ -11,7 +11,7 @@ const Navigation = ({ isDarkMode, toggleDarkMode, isScrolled }) => {
                     </div>
                     <div className="flex items-center space-x-6">
                         <div className="hidden md:flex space-x-8">
-                            {['About', 'Skills', 'Experience', 'Contact'].map((item) => (
+                            {['About', 'Skills', 'Experience', 'Projects', 'Contact'].map((item) => (
                                 <a
                                     key={item}
                                     href={`#${item.toLowerCase()}`}
