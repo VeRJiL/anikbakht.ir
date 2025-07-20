@@ -46,7 +46,7 @@ const HeroSection = () => {
                     ))}
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-4 mb-16 md:mb-0">
+                <div className="flex flex-wrap justify-center gap-4 mb-24 md:mb-0">
                     <a
                         href="#about"
                         className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105"
