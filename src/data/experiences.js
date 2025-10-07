@@ -1,6 +1,22 @@
 export const experiences = [
     {
-        year: 'Aug 2024 – Now',
+        year: 'Mar 2025 – Now',
+        company: 'Self Employed',
+        role: 'Senior Software Engineer',
+        location: 'Remote',
+        achievements: [
+            'Designed and implemented gRPC-based inter-service communication architecture for microservices ecosystem, enabling type-safe and high-performance synchronous RPC calls between 6 distributed services',
+            'Established comprehensive production monitoring infrastructure using Prometheus metrics collection and Grafana dashboards, tracking service health, latency percentiles, and resource utilization across distributed systems',
+            'Deployed centralized logging solution using ELK Stack (Elasticsearch, Logstash, Kibana) for distributed tracing, error aggregation, and real-time log analysis across microservices architecture',
+            'Developed full-stack e-commerce platform for music industry client, managing end-to-end project delivery including client requirements gathering, system architecture, and production deployment',
+            'Created and published open-source Go microservice template repository (github.com/VeRJiL/go-template) providing standardized project structure and reusable patterns for rapid microservice development',
+            'Built custom content management system with headless CMS architecture, separating React-based admin panel from RESTful API backend for flexible content delivery',
+            'Engineered algorithmic trading Expert Advisor (EA) for MetaTrader 5 platform using MQL5, implementing automated position sizing and risk management algorithms for forex trading strategies'
+        ],
+        tech: ['Go', 'gRPC', 'Prometheus', 'Grafana', 'ELK Stack', 'React', 'NestJS', 'MQL5', 'Microservices']
+    },
+    {
+        year: 'Aug 2024 – Mar 2025',
         company: 'Specific-Group Austria',
         role: 'Senior Software Engineer',
         location: 'Remote',
