@@ -1,158 +1,108 @@
 import React from 'react';
-import { Server, Code, Zap, Database, Layers, ArrowUpRight } from 'lucide-react';
+import Reveal from '../common/Reveal';
+import SectionHeading from '../common/SectionHeading';
+import SpotlightCard from '../common/SpotlightCard';
 import TechIcon from '../common/TechIcon';
-import { skills } from '../../data/skills';
+import { useInView } from '../../hooks/useScrollAnimation';
+import { skillGroups } from '../../data/skills';
 
-const SkillsSection = ({ isDarkMode }) => {
-    const skillCategories = [
-        {
-            title: "Backend Development",
-            icon: Server,
-            gradient: "from-blue-500 to-blue-600",
-            skills: skills.backend,
-            id: "backend-skills",
-            description: "Server-side technologies"
-        },
-        {
-            title: "Frontend Development",
-            icon: Code,
-            gradient: "from-purple-500 to-purple-600",
-            skills: skills.frontend,
-            id: "frontend-skills",
-            description: "User interface technologies"
-        },
-        {
-            title: "DevOps & Infrastructure",
-            icon: Zap,
-            gradient: "from-green-500 to-green-600",
-            skills: skills.devops,
-            id: "devops-skills",
-            description: "Deployment and automation"
-        },
-        {
-            title: "Database Technologies",
-            icon: Database,
-            gradient: "from-red-500 to-red-600",
-            skills: skills.databases,
-            id: "database-skills",
-            description: "Data storage solutions"
-        },
-        {
-            title: "System Architecture",
-            icon: Layers,
-            gradient: "from-indigo-500 to-indigo-600",
-            skills: skills.architecture,
-            id: "architecture-skills",
-            description: "Design patterns and scalability"
-        },
-        {
-            title: "Additional Technologies",
-            icon: ArrowUpRight,
-            gradient: "from-gray-500 to-gray-600",
-            skills: [
-                ...skills.apis,
-                ...skills.testing,
-                ...skills.tools,
-                ...skills.messaging
-            ],
-            id: "additional-skills",
-            description: "Other tools and frameworks"
-        }
-    ];
-
-    return (
-        <section id="skills" className="py-24 bg-gray-100">
-            <div className="container mx-auto px-6 max-w-6xl">
-                {/* Header */}
-                <div className="max-w-3xl mx-auto text-center mb-20">
-                    <div className="flex items-center justify-center space-x-3 mb-6">
-                        <div className="w-8 h-0.5 bg-blue-600"></div>
-                        <span className="text-blue-600 font-medium text-sm uppercase tracking-wider">Technical Expertise</span>
-                        <div className="w-8 h-0.5 bg-blue-600"></div>
-                    </div>
-                    <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                        Skills & Technologies
-                    </h2>
-                    <p className="text-xl text-gray-600 leading-relaxed">
-                        Comprehensive expertise across the full technology stack with
-                        <span className="font-semibold text-gray-900"> 9+ years</span> of hands-on experience
-                    </p>
+const SkillRow = ({ item, index, animate }) => (
+    <li>
+        <div className="flex items-center gap-3">
+            <TechIcon tech={item.tech} className="h-6 w-6" />
+            <div className="min-w-0 flex-1">
+                <div className="flex items-baseline justify-between gap-3">
+                    <span className="truncate text-sm font-medium text-fg">
+                        {item.name}
+                        {item.flagship && (
+                            <span className="ml-2 align-middle font-mono text-[9px] uppercase tracking-[0.14em] text-php">
+                                core
+                            </span>
+                        )}
+                    </span>
+                    <span className="shrink-0 font-mono text-[11px] tabular-nums text-faint">{item.level}</span>
                 </div>
-
-                {/* Skills Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {skillCategories.map((category, index) => (
-                        <div
-                            key={category.id}
-                            className="group relative bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-500 hover:-translate-y-2"
-                            data-animate
-                            id={category.id}
-                            style={{ animationDelay: `${index * 0.1}s` }}
-                        >
-                            {/* Gradient Background on Hover */}
-                            <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-500`}></div>
-
-                            {/* Header */}
-                            <div className="relative z-10 mb-8">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className={`w-12 h-12 bg-gradient-to-r ${category.gradient} rounded-xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300`}>
-                                        <category.icon className="w-6 h-6" />
-                                    </div>
-                                    <ArrowUpRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
-                                </div>
-
-                                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors">
-                                    {category.title}
-                                </h3>
-                                <p className="text-sm text-gray-500 mb-6">
-                                    {category.description}
-                                </p>
-                            </div>
-
-                            {/* Skills */}
-                            <div className="relative z-10 space-y-4">
-                                {category.title === "Additional Technologies" ? (
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {category.skills.map((skill, skillIndex) => (
-                                            <div key={skillIndex} className="flex items-center space-x-2 bg-white px-3 py-2 rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:scale-105">
-                                                <TechIcon tech={skill.tech} className="w-4 h-4" />
-                                                <span className="font-medium text-gray-700 text-sm">{skill.name}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    category.skills.map((skill, skillIndex) => (
-                                        <div key={skillIndex} className="flex items-center justify-between">
-                                            <div className="flex items-center space-x-3">
-                                                <TechIcon tech={skill.tech} className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
-                                                <span className="font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
-                                                    {skill.name}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center space-x-2">
-                                                <div className="w-16 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                                    <div
-                                                        className={`h-full bg-gradient-to-r ${category.gradient} rounded-full transition-all duration-1000 ease-out`}
-                                                        style={{ width: `${skill.level}%` }}
-                                                    ></div>
-                                                </div>
-                                                <span className="text-xs font-semibold text-gray-500 min-w-[2rem]">
-                                                    {skill.level}%
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <p className="mt-0.5 truncate text-xs text-muted">{item.detail}</p>
             </div>
+        </div>
 
-            {/* Section Separator */}
-            <div className="h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
-        </section>
+        <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-line/70">
+            <div
+                className={`h-full rounded-full ${
+                    item.flagship ? 'bg-gradient-to-r from-php to-go' : 'bg-fg/25'
+                } transition-[width] duration-1000 ease-out motion-reduce:transition-none`}
+                style={{ width: animate ? `${item.level}%` : '0%', transitionDelay: `${index * 90}ms` }}
+            />
+        </div>
+    </li>
+);
+
+const GroupCard = ({ group, position, featured }) => {
+    const [ref, inView] = useInView({ threshold: 0.2 });
+
+    // The grid span lives on the Reveal wrapper, since that is the grid item.
+    return (
+        <SpotlightCard className="h-full p-6 sm:p-7">
+            <div ref={ref}>
+                <div className="flex items-baseline justify-between gap-3">
+                    <h3 className="font-display text-lg font-semibold tracking-tight">{group.label}</h3>
+                    <span className="font-mono text-[10px] text-faint">{position}</span>
+                </div>
+                <p className="mt-1.5 text-xs text-muted">{group.blurb}</p>
+
+                <ul className="mt-6 space-y-5">
+                    {group.items.map((item, i) => (
+                        <SkillRow key={item.name} item={item} index={i} animate={inView} />
+                    ))}
+                </ul>
+
+                {featured && (
+                    <div className="mt-7 rounded-xl border border-php/25 bg-php/[0.07] p-4">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-php">
+                            What that looks like
+                        </p>
+                        <p className="mt-2 text-sm leading-relaxed text-muted">
+                            Laravel services and legacy <span className="font-semibold text-php">PHP</span> rescues
+                            on one side; Gin/GORM services, gRPC and RabbitMQ on the other. Most of my best work has
+                            been the bridge between the two.
+                        </p>
+                    </div>
+                )}
+            </div>
+        </SpotlightCard>
     );
 };
+
+const SkillsSection = () => (
+    <section id="skills" className="relative scroll-mt-24 py-24 sm:py-32">
+        <div aria-hidden className="hairline absolute inset-x-0 top-0" />
+
+        <div className="container-page">
+            <SectionHeading
+                index="02"
+                eyebrow="Skills"
+                title={
+                    <>
+                        The stack, in the order I{' '}
+                        <span className="gradient-text">actually reach for it</span>.
+                    </>
+                }
+                lead="PHP and Laravel first — that is where most of nine years went. Go is the other half, and everything below is what keeps both honest in production."
+            />
+
+            <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {skillGroups.map((group, i) => (
+                    <Reveal
+                        key={group.id}
+                        delay={Math.min(i, 3) * 80}
+                        className={i === 0 ? 'md:col-span-2 xl:col-span-1 xl:row-span-2' : ''}
+                    >
+                        <GroupCard group={group} position={`0${i + 1}`} featured={i === 0} />
+                    </Reveal>
+                ))}
+            </div>
+        </div>
+    </section>
+);
 
 export default SkillsSection;

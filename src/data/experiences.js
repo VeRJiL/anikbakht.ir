@@ -1,91 +1,118 @@
+// Mirrors resume/resume_data.py. Bullets are ordered PHP-first within each role,
+// and `**PHP**` is rendered bold by the RichText helper.
 export const experiences = [
     {
-        year: 'Mar 2025 – Now',
+        id: 'self-employed',
+        period: 'Mar 2025 — Now',
+        start: 2025,
         company: 'Self Employed',
         role: 'Senior Software Engineer',
         location: 'Remote',
+        current: true,
+        summary:
+            'Running client delivery end to end — architecture, build and production — across e-commerce, CMS and distributed systems work.',
         achievements: [
-            'Designed and implemented gRPC-based inter-service communication architecture for microservices ecosystem, enabling type-safe and high-performance synchronous RPC calls between 6 distributed services',
-            'Established comprehensive production monitoring infrastructure using Prometheus metrics collection and Grafana dashboards, tracking service health, latency percentiles, and resource utilization across distributed systems',
-            'Deployed centralized logging solution using ELK Stack (Elasticsearch, Logstash, Kibana) for distributed tracing, error aggregation, and real-time log analysis across microservices architecture',
-            'Developed full-stack e-commerce platform for music industry client, managing end-to-end project delivery including client requirements gathering, system architecture, and production deployment',
-            'Created and published open-source Go microservice template repository (github.com/VeRJiL/go-template) providing standardized project structure and reusable patterns for rapid microservice development',
-            'Built custom content management system with headless CMS architecture, separating React-based admin panel from RESTful API backend for flexible content delivery',
-            'Engineered algorithmic trading Expert Advisor (EA) for MetaTrader 5 platform using MQL5, implementing automated position sizing and risk management algorithms for forex trading strategies'
+            'Delivered a full-stack e-commerce platform for a music-industry client end to end: requirements gathering, system architecture, implementation and production deployment.',
+            'Built a custom headless CMS, separating a React admin panel from the RESTful API backend for flexible multi-channel content delivery.',
+            'Designed and implemented gRPC-based inter-service communication across 6 distributed services, enabling type-safe, high-performance synchronous RPC calls.',
+            'Established production monitoring with Prometheus and Grafana, tracking service health, latency percentiles and resource utilisation across the distributed system.',
+            'Deployed centralised logging on the ELK Stack (Elasticsearch, Logstash, Kibana) for distributed tracing, error aggregation and real-time log analysis.',
+            'Engineered an algorithmic trading Expert Advisor for MetaTrader 5 in MQL5, implementing automated position sizing and risk-management rules.',
         ],
-        tech: ['Go', 'gRPC', 'Prometheus', 'Grafana', 'ELK Stack', 'React', 'NestJS', 'MQL5', 'Microservices']
+        tech: ['Go', 'gRPC', 'React', 'NestJS', 'Prometheus', 'Grafana', 'Elasticsearch', 'Docker'],
     },
     {
-        year: 'Aug 2024 – Mar 2025',
+        id: 'specific-group',
+        period: 'Aug 2024 — Mar 2025',
+        start: 2024,
         company: 'Specific-Group Austria',
         role: 'Senior Software Engineer',
         location: 'Remote',
+        summary:
+            'Led the break-up of a **PHP** monolith into services, then spent the rest of the engagement making them fast.',
         achievements: [
-            'Spearheaded migration from monolithic to microservices architecture utilizing PHP and NestJS, resulting in improved system scalability and enhanced service reliability',
-            'Engineered advanced frontend optimization strategies through implementation of client-side validation, substantially decreasing server load',
-            'Deployed robust testing frameworks and automated deployment pipelines, achieving 85% code coverage and reducing production bugs by 65%',
-            'Orchestrated performance optimization initiatives across the technology stack, focusing on code efficiency and resource utilization',
-            'Architected Redis caching strategies for high-traffic endpoints, reducing database load by 50% and improving API response times from 200ms to 80ms average',
-            'Built NestJS microservices with RabbitMQ message broker integration, enabling asynchronous communication between services',
-            'Designed and implemented RESTful APIs using NestJS framework, serving 25K+ daily requests with standardized OpenAPI documentation and comprehensive input validation'
+            'Spearheaded the migration of a **PHP** monolith to a microservices architecture (**PHP** + NestJS), improving system scalability and service reliability.',
+            'Architected Redis caching strategies for high-traffic endpoints, reducing database load by 50% and improving average API response times from 200ms to 80ms.',
+            'Designed and implemented RESTful APIs serving 25K+ daily requests, with standardised OpenAPI documentation and comprehensive input validation.',
+            'Built NestJS microservices integrated with a RabbitMQ message broker for asynchronous inter-service communication.',
+            'Deployed automated testing frameworks and deployment pipelines, achieving 85% code coverage and reducing production bugs by 65%.',
+            'Drove performance optimisation across the stack, focusing on code efficiency and resource utilisation.',
+            'Engineered frontend optimisations including client-side validation, substantially decreasing server load.',
         ],
-        tech: ['PHP', 'NestJS', 'Redis', 'RabbitMQ', 'Microservices', 'OpenAPI']
+        tech: ['PHP', 'NestJS', 'Redis', 'RabbitMQ', 'Microservices', 'REST'],
+        highlight: { value: '50%', label: 'less database load' },
     },
     {
-        year: 'Jun 2022 – Jul 2024',
+        id: 'tutianet',
+        period: 'Jun 2022 — Jul 2024',
+        start: 2022,
         company: 'Tutianet',
         role: 'Full Stack Developer',
         location: 'Remote',
+        summary:
+            'Took a **PHP** monolith to Go, and spent two years raising the bar for the team around me.',
         achievements: [
-            'Mentored junior developers and facilitated comprehensive onboarding processes to accelerate team productivity',
-            'Conducted weekly knowledge-sharing sessions to enhance team capabilities and maintain high development standards',
-            'Taught design patterns, SOLID principles, and best practices while maintaining optimal balance between development speed and code quality',
-            'Established educational group code reviews enabling knowledge transfer and collaborative learning among team members',
-            'Collaborated on migrating PHP monolithic gym PWA mobile application to Go, Gin, GORM, PostgreSQL, Redis, AWS S3, Docker, and GitHub Actions',
-            'Developed notification system using SMS with multiple providers, implementing Strategy and Factory patterns for scalable provider management via configuration files',
-            'Created mini development framework using Go, Gin, GORM, Redis, PostgreSQL, Amazon S3, RabbitMQ, Kibana, and Elasticsearch to accelerate microservice development',
-            'Optimized API endpoints by analyzing UI requirements, reducing query complexity and implementing database indexing, improving response times from 70 seconds to 3 seconds'
+            'Led the migration of a monolithic **PHP** gym PWA to Go (Gin, GORM) with PostgreSQL, Redis, AWS S3, Docker and GitHub Actions.',
+            'Optimised API endpoints by analysing real UI requirements, reducing query complexity and adding database indexing — cutting response times from 70 seconds to 3 seconds.',
+            'Built a multi-provider SMS notification system using the Strategy and Factory patterns, making providers swappable through configuration.',
+            'Created an internal development framework (Go, Gin, GORM, Redis, PostgreSQL, Amazon S3, RabbitMQ, Elasticsearch, Kibana) to accelerate microservice delivery.',
+            'Mentored junior developers and ran structured onboarding to accelerate team productivity.',
+            'Taught design patterns, SOLID principles and pragmatic best practices, balancing delivery speed against code quality.',
+            'Established group code reviews and weekly knowledge-sharing sessions as a knowledge-transfer mechanism across the team.',
         ],
-        tech: ['Go', 'Gin', 'GORM', 'PostgreSQL', 'Redis', 'AWS S3', 'RabbitMQ', 'Docker', 'GitHub Actions', 'Elasticsearch', 'Kibana']
+        tech: ['PHP', 'Go', 'Gin', 'GORM', 'PostgreSQL', 'Redis', 'AWS S3', 'Docker', 'GitHub Actions'],
+        highlight: { value: '70s → 3s', label: 'endpoint response time' },
     },
     {
-        year: 'Nov 2018 – May 2022',
+        id: 'dorhato',
+        period: 'Nov 2018 — May 2022',
+        start: 2018,
         company: 'Dorhato',
         role: 'Full Stack Developer',
         location: 'Remote',
+        summary:
+            'Three and a half years of **PHP** product work — reservations, auctions, and the SOA rebuild that kept them up.',
         achievements: [
-            'Participated in UI/UX and product design meetings to ensure strategic alignment and optimal user experience',
-            'Developed complex full-stack reservation system utilizing Test-Driven Development (TDD) methodology',
-            'Conducted thorough code reviews to maintain high code quality standards across development team',
-            'Implemented CI/CD pipelines with automated testing and code quality checks for safe main branch deployments',
-            'Assumed frontend development responsibilities after team departure, delivering PWA auction application for online car sales',
-            'Implemented Service-Oriented Architecture (SOA) reducing server loads and supporting 3K concurrent users through optimization techniques including Redis caching, queue-based async processing, and direct service communication'
+            'Implemented a Service-Oriented Architecture in **PHP** supporting 3K concurrent users, using Redis caching, queue-based async processing and direct service communication to reduce server load.',
+            'Developed a complex full-stack **PHP** reservation system using Test-Driven Development.',
+            'Delivered a PWA auction application for online car sales, taking over all frontend responsibilities after the team departed.',
+            'Implemented CI/CD pipelines with automated testing and code-quality gates to keep the main branch safely deployable.',
+            'Conducted thorough code reviews to maintain quality standards across the team.',
+            'Contributed to UI/UX and product design meetings to keep engineering and product aligned.',
         ],
-        tech: ['PHP', 'TDD', 'CI/CD', 'PWA', 'SOA', 'Redis', 'Queue Processing']
+        tech: ['PHP', 'SOA', 'Redis', 'TDD', 'PWA', 'CI/CD'],
+        highlight: { value: '3K', label: 'concurrent users' },
     },
     {
-        year: 'Mar 2018 – Nov 2018',
+        id: 'imtmc',
+        period: 'Mar 2018 — Nov 2018',
+        start: 2018,
         company: 'IMTMC',
         role: 'Full Stack Developer',
         location: 'Iran',
+        summary: 'A modular **PHP** backend that let a small team ship seven projects in seven months.',
         achievements: [
-            'Developed modular backend architecture enabling faster development cycles and improved code maintainability, facilitating delivery of 7 projects within 7 months',
-            'Participated in client meetings to gather requirements, design database schemas, and implement corresponding backend solutions',
-            'Converted PSD designs to responsive HTML, CSS, and JavaScript implementations for web deployment',
-            'Promoted Git workflow adoption among team members to enhance code synchronization and repository management'
+            'Developed a modular **PHP** (Laravel) backend architecture that shortened development cycles and improved maintainability, enabling delivery of 7 projects in 7 months.',
+            'Ran client requirement meetings, designed database schemas and implemented the corresponding backend solutions.',
+            'Converted PSD designs into responsive HTML, CSS and JavaScript implementations.',
+            'Promoted Git workflow adoption across the team to improve code synchronisation and repository management.',
         ],
-        tech: ['PHP', 'Laravel', 'MySQL', 'HTML5', 'CSS3', 'JavaScript', 'Git']
+        tech: ['PHP', 'Laravel', 'MySQL', 'JavaScript', 'Git'],
+        highlight: { value: '7 in 7', label: 'projects / months' },
     },
     {
-        year: 'Oct 2016 – Dec 2017',
+        id: 'daba',
+        period: 'Oct 2016 — Dec 2017',
+        start: 2016,
         company: 'Daba',
         role: 'Full Stack Developer',
         location: 'Iran',
+        summary: 'Where the legacy-**PHP** rescue work started.',
         achievements: [
-            'Transformed legacy codebase to modern framework, reducing development cycles by 50%',
-            'Executed PHP version upgrade from 5.7 to 7, enhancing code maintainability by 30%',
-            'Established best practices through design pattern training, cutting maintenance costs by 50%'
+            'Executed a **PHP** upgrade from 5.7 to 7 across the codebase, improving maintainability by 30%.',
+            'Transformed a legacy codebase onto a modern **PHP** framework, reducing development cycles by 50%.',
+            'Established best practices through design-pattern training, cutting maintenance costs by 50%.',
         ],
-        tech: ['PHP', 'Legacy Modernization', 'Design Patterns', 'Code Optimization']
-    }
+        tech: ['PHP', 'Design Patterns', 'Legacy Modernisation'],
+    },
 ];

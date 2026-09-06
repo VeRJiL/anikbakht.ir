@@ -1,46 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useInView } from '../../hooks/useScrollAnimation';
 
-const AnimatedCounter = ({ end, duration = 2000, suffix = '', className = 'text-3xl font-bold text-white' }) => {
-    const [count, setCount] = useState(0);
-    const [isVisible, setIsVisible] = useState(false);
-    const counterRef = useRef();
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting && !isVisible) {
-                    setIsVisible(true);
-                }
-            },
-            { threshold: 0.5 }
-        );
-
-        if (counterRef.current) {
-            observer.observe(counterRef.current);
-        }
-
-        return () => observer.disconnect();
-    }, [isVisible]);
+/** Counts up to `end` once the number scrolls into view. */
+const AnimatedCounter = ({ end, duration = 1600, prefix = '', suffix = '', className = '' }) => {
+    const [ref, inView] = useInView({ threshold: 0.4 });
+    const [value, setValue] = useState(0);
 
     useEffect(() => {
-        if (isVisible) {
-            let startTime;
-            const animateCount = (timestamp) => {
-                if (!startTime) startTime = timestamp;
-                const progress = Math.min((timestamp - startTime) / duration, 1);
-                setCount(Math.floor(progress * end));
-                if (progress < 1) {
-                    requestAnimationFrame(animateCount);
-                }
-            };
-            requestAnimationFrame(animateCount);
+        if (!inView) return undefined;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            setValue(end);
+            return undefined;
         }
-    }, [isVisible, end, duration]);
+
+        let frame;
+        let start;
+        const step = (ts) => {
+            if (start === undefined) start = ts;
+            const progress = Math.min((ts - start) / duration, 1);
+            setValue(Math.round(easeOut(progress) * end));
+            if (progress < 1) frame = window.requestAnimationFrame(step);
+        };
+        frame = window.requestAnimationFrame(step);
+        return () => window.cancelAnimationFrame(frame);
+    }, [inView, end, duration]);
 
     return (
-        <span ref={counterRef} className={className}>
-      {count}{suffix}
-    </span>
+        <span ref={ref} className={className}>
+            {prefix}
+            {value}
+            {suffix}
+        </span>
     );
 };
 

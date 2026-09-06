@@ -1,32 +1,33 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Navigation from './components/layout/Navigation';
 import Footer from './components/layout/Footer';
+import Spotlight from './components/common/Spotlight';
 import HeroSection from './components/sections/HeroSection';
 import AboutSection from './components/sections/AboutSection';
 import SkillsSection from './components/sections/SkillsSection';
 import ExperienceSection from './components/sections/ExperienceSection';
-import ProjectsSection from './components/sections/ProjectsSection';
 import ContactSection from './components/sections/ContactSection';
 import { useTheme } from './hooks/useTheme';
-import { useScrollAnimation } from './hooks/useScrollAnimation';
-import './styles/animations.css';
 
 const App = () => {
-  const { isDarkMode, toggleDarkMode } = useTheme();
-  const { visibleElements, isScrolled } = useScrollAnimation();
+    const { isDark, toggleTheme } = useTheme();
 
-  return (
-      <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        <Navigation isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} isScrolled={isScrolled} />
-        <HeroSection />
-        <AboutSection isDarkMode={isDarkMode} visibleElements={visibleElements} />
-        <SkillsSection isDarkMode={isDarkMode} />
-        <ExperienceSection isDarkMode={isDarkMode} visibleElements={visibleElements} />
-        {/* <ProjectsSection visibleElements={visibleElements} /> */}
-        <ContactSection />
-        <Footer isDarkMode={isDarkMode} />
-      </div>
-  );
+    return (
+        <div className="relative min-h-screen bg-bg text-fg">
+            <Spotlight />
+            <Navigation isDark={isDark} toggleTheme={toggleTheme} />
+
+            <main id="main" className="relative z-10">
+                <HeroSection />
+                <AboutSection />
+                <SkillsSection />
+                <ExperienceSection />
+                <ContactSection />
+            </main>
+
+            <Footer />
+        </div>
+    );
 };
 
 export default App;

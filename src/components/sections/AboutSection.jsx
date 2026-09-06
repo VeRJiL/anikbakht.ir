@@ -1,93 +1,110 @@
 import React from 'react';
-import { Code, Server, Database } from 'lucide-react';
+import { GraduationCap, Languages, MapPin, Sparkles } from 'lucide-react';
+import Reveal from '../common/Reveal';
+import RichText from '../common/RichText';
+import SectionHeading from '../common/SectionHeading';
+import SpotlightCard from '../common/SpotlightCard';
+import AnimatedCounter from '../common/AnimatedCounter';
+import { education, intro, languages, metrics, profile } from '../../data/profile';
 
-const AboutSection = ({ isDarkMode, visibleElements }) => {
-    const aboutCards = [
-        {
-            icon: Code,
-            title: "Full Stack Development",
-            description: "Go, PHP, NestJS, React, TypeScript, and modern frameworks",
-            id: "about-card-1",
-            animation: "animate-slide-in-left",
-            delay: "0.2s"
-        },
-        {
-            icon: Server,
-            title: "Microservices Architecture",
-            description: "SOA patterns, RabbitMQ messaging, and scalable solutions",
-            id: "about-card-2",
-            animation: "animate-fade-in",
-            delay: "0.4s"
-        },
-        {
-            icon: Database,
-            title: "Performance Optimization",
-            description: "Redis caching, database indexing, and system tuning",
-            id: "about-card-3",
-            animation: "animate-slide-in-right",
-            delay: "0.6s"
-        }
-    ];
+const AboutSection = () => (
+    <section id="about" className="relative scroll-mt-24 py-24 sm:py-32">
+        <div className="container-page">
+            <SectionHeading
+                index="01"
+                eyebrow="About"
+                title={
+                    <>
+                        Nine years of making backends{' '}
+                        <span className="gradient-text">behave under load</span>.
+                    </>
+                }
+            />
 
-    return (
-        <section id="about" className={`py-24 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
-            <div className="container mx-auto px-6 max-w-5xl">
-                <div className="text-center mb-16">
-                    <h2
-                        className={`text-4xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
-                        data-animate
-                        id="about-title"
-                    >
-                        About Me
-                    </h2>
-                    <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
+            <div className="mt-14 grid gap-10 lg:grid-cols-[1.35fr,0.65fr]">
+                {/* Narrative */}
+                <div className="space-y-5">
+                    {intro.map((paragraph, i) => (
+                        <Reveal key={i} delay={i * 90}>
+                            <p className="text-pretty text-base leading-[1.85] text-muted sm:text-lg">
+                                <RichText text={paragraph.replace(/\s+/g, ' ').trim()} />
+                            </p>
+                        </Reveal>
+                    ))}
+
+                    <Reveal delay={280}>
+                        <div className="flex flex-wrap gap-2 pt-2">
+                            {profile.stack.map((item, i) => (
+                                <span key={item} className={`chip ${i === 0 ? 'chip-accent' : ''}`}>
+                                    {item}
+                                </span>
+                            ))}
+                        </div>
+                    </Reveal>
                 </div>
 
-                <div className="max-w-4xl mx-auto">
-                    <div
-                        className={`text-lg leading-relaxed mb-12 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} ${visibleElements.has('about-text') ? 'animate-fade-in' : 'opacity-0'}`}
-                        data-animate
-                        id="about-text"
-                    >
-                        <p className="mb-6">
-                            Results-driven Senior Full Stack Engineer with 9+ years of expertise in building scalable
-                            applications using Go, PHP, Node.js (NestJS), and modern JavaScript/TypeScript ecosystems.
-                            Demonstrated success in architecting microservices, implementing SOA patterns, and leading
-                            technical initiatives including mentoring development teams.
-                        </p>
-                        <p>
-                            Proven track record in optimizing system performance, implementing CI/CD pipelines, and
-                            delivering complex solutions using Redis caching, RabbitMQ messaging, and comprehensive
-                            testing frameworks. Achieved 85% code coverage and reduced production bugs by 65%.
-                        </p>
-                    </div>
-
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {aboutCards.map((card) => (
-                            <div
-                                key={card.id}
-                                className={`text-center p-6 rounded-lg transition-all duration-300 hover-scale animate-float ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'} ${visibleElements.has(card.id) ? card.animation : 'opacity-0'}`}
-                                data-animate
-                                id={card.id}
-                                style={{animationDelay: card.delay}}
-                            >
-                                <card.icon className="w-12 h-12 text-blue-600 mx-auto mb-4 animate-pulse" />
-                                <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                                    {card.title}
-                                </h3>
-                                <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                    {card.description}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                {/* Facts */}
+                <div className="space-y-3">
+                    {[
+                        { Icon: MapPin, label: 'Based in', value: profile.location, sub: 'Working remote-first' },
+                        {
+                            Icon: GraduationCap,
+                            label: 'Education',
+                            value: education.degree,
+                            sub: `${education.school} · ${education.period}`,
+                        },
+                        {
+                            Icon: Languages,
+                            label: 'Languages',
+                            value: languages.map((l) => l.name).join(' · '),
+                            sub: languages.map((l) => `${l.name} (${l.level})`).join(', '),
+                        },
+                        {
+                            Icon: Sparkles,
+                            label: 'Currently',
+                            value: profile.availability,
+                            sub: 'PHP-first roles, Go a close second',
+                        },
+                    ].map(({ Icon, label, value, sub }, i) => (
+                        <Reveal key={label} delay={i * 80}>
+                            <SpotlightCard className="p-5">
+                                <div className="flex items-start gap-3.5">
+                                    <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-php/10 text-php">
+                                        <Icon className="h-4 w-4" />
+                                    </span>
+                                    <div className="min-w-0">
+                                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
+                                            {label}
+                                        </p>
+                                        <p className="mt-1 text-sm font-medium text-fg">{value}</p>
+                                        <p className="mt-0.5 text-xs leading-relaxed text-muted">{sub}</p>
+                                    </div>
+                                </div>
+                            </SpotlightCard>
+                        </Reveal>
+                    ))}
                 </div>
             </div>
 
-            {/* Section Separator */}
-            <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-        </section>
-    );
-};
+            {/* Metrics strip */}
+            <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line/80 bg-line/60 sm:grid-cols-3 lg:grid-cols-6">
+                {metrics.map((m, i) => (
+                    <Reveal key={m.label} delay={i * 70} className="bg-bg">
+                        <div className="group h-full bg-surface/40 p-5 transition-colors hover:bg-elevated/70">
+                            <AnimatedCounter
+                                end={m.value}
+                                prefix={m.prefix || ''}
+                                suffix={m.suffix || ''}
+                                className="font-display text-3xl font-bold tracking-tight text-fg sm:text-4xl"
+                            />
+                            <p className="mt-2 text-xs font-medium leading-snug text-fg/85">{m.label}</p>
+                            <p className="mt-1 text-[11px] leading-snug text-faint">{m.hint}</p>
+                        </div>
+                    </Reveal>
+                ))}
+            </div>
+        </div>
+    </section>
+);
 
 export default AboutSection;

@@ -1,160 +1,155 @@
-import React from 'react';
-import { Mail, Linkedin, MessageCircle, ArrowRight, MapPin, Clock } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowUpRight, Check, Copy, Download, Github, Linkedin, Mail, Phone } from 'lucide-react';
+import Aurora from '../common/Aurora';
+import Reveal from '../common/Reveal';
+import SpotlightCard from '../common/SpotlightCard';
+import { profile } from '../../data/profile';
 
-const ContactSection = () => {
-    const contactMethods = [
-        {
-            icon: Mail,
-            title: "Email",
-            subtitle: "Best way to reach me",
-            contact: "arash.nykbakht@gmail.com",
-            href: "mailto:arash.nykbakht@gmail.com",
-            gradient: "from-blue-500 to-blue-600"
-        },
-        {
-            icon: Linkedin,
-            title: "LinkedIn",
-            subtitle: "Professional network",
-            contact: "linkedin.com/in/anikbakht",
-            href: "https://www.linkedin.com/in/anikbakht/",
-            gradient: "from-blue-600 to-blue-700"
+const CopyButton = ({ value, label }) => {
+    const [copied, setCopied] = useState(false);
+
+    const copy = async () => {
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1800);
+        } catch {
+            // Clipboard can be blocked (insecure context, denied permission).
+            // The value is a visible link either way, so just do nothing.
         }
-    ];
-
-    const opportunities = [
-        "Senior/Lead Engineering Roles",
-        "Microservices Architecture Projects",
-        "Performance Optimization Challenges",
-        "Technical Leadership Opportunities"
-    ];
+    };
 
     return (
-        <section id="contact" className="py-24 bg-white">
-            <div className="container mx-auto px-6 max-w-6xl">
-                {/* Header */}
-                <div className="max-w-3xl mx-auto text-center mb-20">
-                    <div className="flex items-center justify-center space-x-3 mb-6">
-                        <div className="w-8 h-0.5 bg-blue-600"></div>
-                        <span className="text-blue-600 font-medium text-sm uppercase tracking-wider">Let's Connect</span>
-                        <div className="w-8 h-0.5 bg-blue-600"></div>
-                    </div>
-                    <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                        Get In Touch
-                    </h2>
-                    <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                        Ready to discuss your next project or opportunity? I'd love to hear from you.
-                    </p>
-
-                    {/* Status */}
-                    <div className="inline-flex items-center space-x-3 bg-green-50 border border-green-200 rounded-2xl px-6 py-4">
-                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-green-700 font-medium">Available for Remote Opportunities</span>
-                    </div>
-                </div>
-
-                {/* Main Content */}
-                <div className="max-w-6xl mx-auto">
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
-
-                        {/* Left Column - Contact Methods */}
-                        <div className="space-y-8">
-                            <div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h3>
-                                <div className="space-y-4">
-                                    {contactMethods.map((method, index) => (
-                                        <a
-                                            key={index}
-                                            href={method.href}
-                                            target={method.href.startsWith('http') ? '_blank' : undefined}
-                                            rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                            className="group flex items-center p-4 sm:p-6 bg-white border border-gray-100 rounded-2xl hover:border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                                        >
-                                            <div className={`w-14 h-14 bg-gradient-to-r ${method.gradient} rounded-xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300 mr-6`}>
-                                                <method.icon className="w-6 h-6" />
-                                            </div>
-                                            <div className="flex-1">
-                                                <h4 className="font-semibold text-gray-900 mb-1">{method.title}</h4>
-                                                <p className="text-sm text-gray-500 mb-2">{method.subtitle}</p>
-                                                <p className="text-blue-600 font-medium group-hover:text-blue-700 transition-colors">
-                                                    {method.contact}
-                                                </p>
-                                            </div>
-                                            <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-300" />
-                                        </a>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Quick Info */}
-                            <div className="bg-white p-4 sm:p-8 rounded-2xl border border-gray-100">
-                                <h4 className="font-semibold text-gray-900 mb-6">Quick Information</h4>
-                                <div className="space-y-4">
-                                    <div className="flex items-center space-x-3">
-                                        <MapPin className="w-5 h-5 text-gray-400" />
-                                        <span className="text-gray-600">Remote Worldwide</span>
-                                    </div>
-                                    <div className="flex items-center space-x-3">
-                                        <Clock className="w-5 h-5 text-gray-400" />
-                                        <span className="text-gray-600">Usually responds within 24 hours</span>
-                                    </div>
-                                    <div className="flex items-center space-x-3">
-                                        <MessageCircle className="w-5 h-5 text-gray-400" />
-                                        <span className="text-gray-600">9+ Years Experience</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Right Column - Opportunities */}
-                        <div className="space-y-8">
-                            <div className="bg-white p-4 sm:p-8 rounded-2xl border border-gray-100">
-                                <h3 className="text-2xl font-bold text-gray-900 mb-6">What I'm Looking For</h3>
-                                <div className="space-y-4 mb-8">
-                                    {opportunities.map((opportunity, index) => (
-                                        <div key={index} className="flex items-center space-x-4 group">
-                                            <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                            </div>
-                                            <span className="text-gray-700 font-medium group-hover:text-gray-900 transition-colors">
-                                                {opportunity}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl border border-blue-100">
-                                    <h4 className="font-semibold text-gray-900 mb-3">Core Expertise</h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        {["Go", "PHP", "NestJS", "Microservices", "System Architecture", "Performance Optimization"].map((tech, index) => (
-                                            <span key={index} className="px-3 py-2 bg-white/80 border border-blue-200/50 text-gray-700 text-sm rounded-lg font-medium">
-                                                {tech}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* CTA */}
-                            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 sm:p-8 rounded-2xl text-white">
-                                <h3 className="text-xl font-bold mb-2">Ready to Start a Conversation?</h3>
-                                <p className="text-blue-100 mb-6">
-                                    I'm always interested in discussing new opportunities and interesting projects.
-                                </p>
-                                <a
-                                    href="mailto:arash.nykbakht@gmail.com"
-                                    className="group inline-flex items-center justify-center w-full px-4 sm:px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-                                >
-                                    <Mail className="w-5 h-5 mr-2 group-hover:animate-bounce" />
-                                    Send me an email
-                                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <button
+            type="button"
+            onClick={copy}
+            aria-label={copied ? `${label} copied` : `Copy ${label}`}
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-line/70 text-faint
+                       transition-colors hover:border-php/40 hover:text-fg"
+        >
+            {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+        </button>
     );
 };
+
+const CHANNELS = [
+    {
+        Icon: Mail,
+        label: 'Email',
+        value: profile.email,
+        href: `mailto:${profile.email}`,
+        copyable: true,
+        note: 'Best for roles and project enquiries',
+    },
+    {
+        Icon: Linkedin,
+        label: 'LinkedIn',
+        value: profile.linkedinLabel,
+        href: profile.linkedin,
+        note: 'Full history and recommendations',
+    },
+    {
+        Icon: Phone,
+        label: 'Phone',
+        value: profile.phone,
+        href: profile.phoneHref,
+        copyable: true,
+        note: 'Türkiye · UTC+3',
+    },
+    {
+        Icon: Github,
+        label: 'GitHub',
+        value: profile.githubLabel,
+        href: profile.github,
+        note: 'Code and side projects',
+    },
+];
+
+const ContactSection = () => (
+    <section id="contact" className="relative isolate scroll-mt-24 overflow-hidden py-24 sm:py-32">
+        <Aurora />
+
+        <div className="container-page relative">
+            <div className="mx-auto max-w-2xl text-center">
+                <Reveal>
+                    <span className="font-mono text-xs uppercase tracking-[0.22em] text-muted">
+                        04 · Contact
+                    </span>
+                </Reveal>
+
+                <Reveal delay={70}>
+                    <h2 className="mt-5 text-balance font-display text-4xl font-bold tracking-tight sm:text-6xl">
+                        Got a <span className="gradient-text">PHP</span> codebase that needs to move faster?
+                    </h2>
+                </Reveal>
+
+                <Reveal delay={130}>
+                    <p className="mx-auto mt-5 max-w-xl text-pretty leading-relaxed text-muted sm:text-lg">
+                        I am open to senior backend roles — PHP/Laravel first, Go a close second — and to
+                        consulting on migrations, performance work and service architecture.
+                    </p>
+                </Reveal>
+
+                <Reveal delay={190}>
+                    <div className="mt-9 flex flex-wrap justify-center gap-3">
+                        <a
+                            href={`mailto:${profile.email}`}
+                            className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-php to-go
+                                       px-6 py-3.5 text-sm font-semibold text-white shadow-glow
+                                       transition-transform hover:-translate-y-0.5"
+                        >
+                            <Mail className="h-4 w-4" />
+                            Email me
+                            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        </a>
+                        <a
+                            href={profile.cv}
+                            download
+                            className="inline-flex items-center gap-2 rounded-xl border border-line bg-surface/60 px-6 py-3.5
+                                       text-sm font-medium text-fg backdrop-blur transition-colors hover:border-php/40"
+                        >
+                            <Download className="h-4 w-4" />
+                            Download CV
+                        </a>
+                    </div>
+                </Reveal>
+            </div>
+
+            <div className="mx-auto mt-16 grid max-w-4xl gap-4 sm:grid-cols-2">
+                {CHANNELS.map(({ Icon, label, value, href, note, copyable }, i) => {
+                    const external = href.startsWith('http');
+                    return (
+                        <Reveal key={label} delay={i * 70}>
+                            <SpotlightCard className="p-5">
+                                <div className="flex items-center gap-4">
+                                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-php/10 text-php">
+                                        <Icon className="h-5 w-5" />
+                                    </span>
+
+                                    <div className="min-w-0 flex-1">
+                                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
+                                            {label}
+                                        </p>
+                                        <a
+                                            href={href}
+                                            target={external ? '_blank' : undefined}
+                                            rel={external ? 'noreferrer' : undefined}
+                                            className="mt-0.5 block truncate text-sm font-medium text-fg transition-colors hover:text-php"
+                                        >
+                                            {value}
+                                        </a>
+                                        <p className="mt-0.5 truncate text-xs text-muted">{note}</p>
+                                    </div>
+
+                                    {copyable && <CopyButton value={value} label={label} />}
+                                </div>
+                            </SpotlightCard>
+                        </Reveal>
+                    );
+                })}
+            </div>
+        </div>
+    </section>
+);
 
 export default ContactSection;

@@ -2,25 +2,140 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer base {
+  /* ---- Light theme -------------------------------------------------- */
+  :root {
+    --bg: 248 249 252;
+    --surface: 255 255 255;
+    --elevated: 255 255 255;
+    --line: 224 228 238;
+    --fg: 12 16 28;
+    --muted: 82 92 114;
+    --faint: 105 114 133;
+    --php: 92 74 214;
+    --go: 0 112 145;
+    color-scheme: light;
+  }
+
+  /* ---- Dark theme (the site's primary look) ------------------------- */
+  .dark {
+    --bg: 6 8 16;
+    --surface: 13 17 30;
+    --elevated: 19 24 41;
+    --line: 34 42 66;
+    --fg: 237 241 250;
+    --muted: 156 166 191;
+    --faint: 118 129 156; /* kept above 4.5:1 on --bg for small meta text */
+    --php: 143 124 255;
+    --go: 60 199 235;
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-line;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    @apply bg-bg font-sans text-fg antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgb(var(--php) / 0.32);
+    color: rgb(var(--fg));
+  }
+
+  /* A slim, themed scrollbar keeps the dark canvas from being broken by
+     a bright native gutter. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--bg));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--line));
+    border-radius: 99px;
+    border: 2px solid rgb(var(--bg));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--php) / 0.6);
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--php));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-content px-5 sm:px-8;
+  }
+
+  /* Frosted panel used for every card on the site. */
+  .glass {
+    @apply rounded-2xl border border-line/80 bg-surface/70 backdrop-blur-xl;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-php via-php to-go bg-clip-text text-transparent;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-elevated/60
+           px-3 py-1 font-mono text-[11px] tracking-wide text-muted transition-colors;
+  }
+
+  .chip-accent {
+    @apply border-php/30 bg-php/10 text-php;
+  }
+
+  /* Thin gradient hairline used as a section divider. */
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-line to-transparent;
+  }
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Fades a marquee / scroller out at both edges. */
+  .mask-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+
+  .bg-grid {
+    background-image: linear-gradient(rgb(var(--line) / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--line) / 0.5) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-  monospace;
+/* Respect the OS "reduce motion" setting: kill decorative motion, keep the
+   content fully visible (reveal animations must not leave anything hidden). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
