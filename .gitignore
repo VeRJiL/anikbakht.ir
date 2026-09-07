@@ -28,3 +28,8 @@ yarn-error.log*
 # python (resume builder)
 __pycache__/
 *.pyc
+
+# build scratch dirs used by scripts/deploy.sh
+/build.new
+/build.prev
+/build.failed

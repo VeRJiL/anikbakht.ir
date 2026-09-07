@@ -1,0 +1,7 @@
+# Shell scripts must keep LF endings. Checked out with CRLF on a Linux box,
+# bash fails with an opaque "\r: command not found".
+*.sh text eol=lf
+
+# Generated CV artefacts are binary - never line-ending normalised or diffed.
+*.pdf binary
+*.docx binary
