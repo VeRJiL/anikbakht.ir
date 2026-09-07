@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Download, Menu, Moon, Sun, X } from 'lucide-react';
+import Logo from '../common/Logo';
 import { profile } from '../../data/profile';
 import { useActiveSection, useScrollProgress } from '../../hooks/useScrollAnimation';
 
@@ -51,9 +52,7 @@ const Navigation = ({ isDark, toggleTheme }) => {
             >
                 <div className="container-page flex h-16 items-center justify-between gap-4 sm:h-20">
                     <a href="#top" className="group flex items-center gap-3" aria-label="Back to top">
-                        <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-php to-go font-display text-sm font-bold text-white">
-                            AN
-                        </span>
+                        <Logo className="h-9 w-9 transition-transform group-hover:scale-105" />
                         <span className="hidden flex-col leading-tight sm:flex">
                             <span className="font-display text-sm font-semibold tracking-tight">{profile.name}</span>
                             <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
