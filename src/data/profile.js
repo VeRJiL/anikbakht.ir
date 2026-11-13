@@ -17,6 +17,7 @@ export const profile = {
     githubLabel: 'github.com/VeRJiL',
     cv: '/Arash-Nikbakht-CV.pdf',
     photo: '/assets/images/Arash-Nikbakht.jpg',
+    photo2x: '/assets/images/Arash-Nikbakht@2x.jpg',
     yearsExperience: 9,
 };
 

@@ -123,7 +123,7 @@ const Hero = () => (
                 </div>
 
                 {/* ---- Portrait + code card ---- */}
-                <Reveal immediate delay={180} className="relative mx-auto w-full max-w-md lg:max-w-none">
+                <Reveal immediate delay={180} className="relative mx-auto w-full max-w-[20.5rem] lg:ml-auto lg:mr-0">
                     <div className="relative">
                         <div
                             aria-hidden
@@ -133,9 +133,11 @@ const Hero = () => (
                         <div className="relative overflow-hidden rounded-[1.75rem] border border-line/80 bg-surface/60 p-2 backdrop-blur-xl">
                             <img
                                 src={profile.photo}
+                                srcSet={`${profile.photo} 1x, ${profile.photo2x} 2x`}
                                 alt={`${profile.name}, Senior Backend Engineer`}
-                                width="720"
-                                height="900"
+                                width="330"
+                                height="412"
+                                fetchPriority="high"
                                 className="aspect-[4/5] w-full rounded-[1.35rem] object-cover"
                             />
 
@@ -154,7 +156,7 @@ const Hero = () => (
                         </div>
 
                         {/* Code card, overlapping the portrait */}
-                        <div className="relative -mt-10 ml-auto w-[min(100%,26rem)] overflow-hidden rounded-2xl border border-line/80 bg-[rgb(var(--bg))]/92 shadow-lift backdrop-blur-xl lg:-mr-6">
+                        <div className="relative -mt-10 ml-auto w-[min(112%,22rem)] overflow-hidden rounded-2xl border border-line/80 bg-[rgb(var(--bg))]/92 shadow-lift backdrop-blur-xl">
                             <div className="flex items-center gap-2 border-b border-line/70 px-4 py-2.5">
                                 <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
                                 <span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" />
