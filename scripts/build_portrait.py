@@ -18,7 +18,9 @@ import sys
 from PIL import Image, ImageEnhance, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-IMAGES = os.path.join(ROOT, "public", "assets", "images")
+# src/, not public/: Vite content-hashes imported assets, so a re-export
+# gets a new filename and cannot be pinned by an immutable CDN cache.
+IMAGES = os.path.join(ROOT, "src", "assets")
 # Unprocessed originals live outside public/ so they are never published.
 SOURCES = os.path.join(ROOT, "assets-src")
 
@@ -71,7 +73,7 @@ def main():
 
     for suffix, width in [("", DISPLAY_WIDTH), ("@2x", DISPLAY_WIDTH * 2)]:
         out = finish(cropped, width)
-        path = os.path.join(IMAGES, f"Arash-Nikbakht{suffix}.jpg")
+        path = os.path.join(IMAGES, f"portrait{suffix}.jpg")
         out.save(path, "JPEG", quality=88, optimize=True, progressive=True)
         upscale = width / cropped.size[0]
         print(f"  wrote {os.path.basename(path):26s} {out.size[0]}x{out.size[1]} "

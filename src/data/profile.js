@@ -1,3 +1,10 @@
+// Imported rather than referenced from public/: Vite content-hashes imported
+// assets, so the filename changes whenever the image does. Files in public/ keep
+// a fixed name, and our cache headers are `immutable` for a year — a re-exported
+// portrait under the same name stays stale at the CDN until the cache is purged.
+import portrait from '../assets/portrait.jpg';
+import portrait2x from '../assets/portrait@2x.jpg';
+
 export const profile = {
     name: 'Arash Nikbakht',
     firstName: 'Arash',
@@ -16,8 +23,8 @@ export const profile = {
     github: 'https://github.com/VeRJiL',
     githubLabel: 'github.com/VeRJiL',
     cv: '/Arash-Nikbakht-CV.pdf',
-    photo: '/assets/images/Arash-Nikbakht.jpg',
-    photo2x: '/assets/images/Arash-Nikbakht@2x.jpg',
+    photo: portrait,
+    photo2x: portrait2x,
     yearsExperience: 9,
 };
 
