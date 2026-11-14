@@ -90,14 +90,14 @@ jobs:
       # would let anyone skip the proxy and hit the box directly.
       - name: Set up the deploy key
         env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
+          DEPLOY_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DEPLOY_HOST: ${{ secrets.SERVER_IP }}
+          DEPLOY_PORT: ${{ secrets.SSH_PORT || '22' }}
         run: |
           set -euo pipefail
           missing=
-          [ -n "$DEPLOY_KEY" ]  || missing="$missing DEPLOY_SSH_KEY"
-          [ -n "$DEPLOY_HOST" ] || missing="$missing DEPLOY_HOST"
+          [ -n "$DEPLOY_KEY" ]  || missing="$missing SSH_PRIVATE_KEY"
+          [ -n "$DEPLOY_HOST" ] || missing="$missing SERVER_IP"
           if [ -n "$missing" ]; then
             echo "::error::missing repository secret(s):$missing - see README deploy notes"
             exit 1
@@ -110,15 +110,15 @@ jobs:
 
           # Fail here, with a clear message, rather than inside a tar pipe.
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o ConnectTimeout=20 \
-              -p "$DEPLOY_PORT" "${{ vars.DEPLOY_USER || 'root' }}@$DEPLOY_HOST" \
+              -p "$DEPLOY_PORT" "${{ secrets.SSH_USER || 'root' }}@$DEPLOY_HOST" \
               'echo "ssh ok: $(hostname)"' \
-            || { echo "::error::cannot SSH to the server - check DEPLOY_HOST/PORT and that the public key is in authorized_keys"; exit 1; }
+            || { echo "::error::cannot SSH to the server - check SERVER_IP/SSH_PORT and that the public key is in authorized_keys"; exit 1; }
 
       - name: Upload the build to the server
         env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
-          DEPLOY_USER: ${{ vars.DEPLOY_USER || 'root' }}
+          DEPLOY_HOST: ${{ secrets.SERVER_IP }}
+          DEPLOY_PORT: ${{ secrets.SSH_PORT || '22' }}
+          DEPLOY_USER: ${{ secrets.SSH_USER || 'root' }}
           APP_DIR: ${{ vars.DEPLOY_APP_DIR || '/root/anikbakht.ir' }}
         run: |
           set -euo pipefail
@@ -131,9 +131,9 @@ jobs:
 
       - name: Activate and verify
         env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
-          DEPLOY_USER: ${{ vars.DEPLOY_USER || 'root' }}
+          DEPLOY_HOST: ${{ secrets.SERVER_IP }}
+          DEPLOY_PORT: ${{ secrets.SSH_PORT || '22' }}
+          DEPLOY_USER: ${{ secrets.SSH_USER || 'root' }}
           APP_DIR: ${{ vars.DEPLOY_APP_DIR || '/root/anikbakht.ir' }}
         run: |
           set -euo pipefail
