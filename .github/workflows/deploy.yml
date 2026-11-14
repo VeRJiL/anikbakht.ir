@@ -85,24 +85,39 @@ jobs:
           name: site
           path: build
 
+      # Host and port are secrets, not vars: this repo is public, and the
+      # public hostnames sit behind Cloudflare. Committing the origin address
+      # would let anyone skip the proxy and hit the box directly.
       - name: Set up the deploy key
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-          DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'japs.ir' }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
         run: |
           set -euo pipefail
-          test -n "$DEPLOY_KEY" || {
-            echo "::error::DEPLOY_SSH_KEY secret is not set - see scripts/activate.sh header"
+          missing=
+          [ -n "$DEPLOY_KEY" ]  || missing="$missing DEPLOY_SSH_KEY"
+          [ -n "$DEPLOY_HOST" ] || missing="$missing DEPLOY_HOST"
+          if [ -n "$missing" ]; then
+            echo "::error::missing repository secret(s):$missing - see README deploy notes"
             exit 1
-          }
+          fi
+
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -p "$DEPLOY_PORT" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          # Fail here, with a clear message, rather than inside a tar pipe.
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o ConnectTimeout=20 \
+              -p "$DEPLOY_PORT" "${{ vars.DEPLOY_USER || 'root' }}@$DEPLOY_HOST" \
+              'echo "ssh ok: $(hostname)"' \
+            || { echo "::error::cannot SSH to the server - check DEPLOY_HOST/PORT and that the public key is in authorized_keys"; exit 1; }
 
       - name: Upload the build to the server
         env:
-          DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'japs.ir' }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
           DEPLOY_USER: ${{ vars.DEPLOY_USER || 'root' }}
           APP_DIR: ${{ vars.DEPLOY_APP_DIR || '/root/anikbakht.ir' }}
         run: |
@@ -110,13 +125,14 @@ jobs:
           # Streamed as a tarball so the whole release lands in one connection
           # and needs nothing installed on the server beyond tar.
           tar czf - -C build . | ssh -i ~/.ssh/deploy_key \
-            -o IdentitiesOnly=yes -o ConnectTimeout=20 \
+            -o IdentitiesOnly=yes -o ConnectTimeout=20 -p "$DEPLOY_PORT" \
             "$DEPLOY_USER@$DEPLOY_HOST" \
             "set -e; cd '$APP_DIR'; rm -rf build.new; mkdir -p build.new; tar xzf - -C build.new"
 
       - name: Activate and verify
         env:
-          DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'japs.ir' }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
           DEPLOY_USER: ${{ vars.DEPLOY_USER || 'root' }}
           APP_DIR: ${{ vars.DEPLOY_APP_DIR || '/root/anikbakht.ir' }}
         run: |
@@ -124,7 +140,7 @@ jobs:
           # Piped over stdin so the server always runs the activation logic
           # from the commit being deployed - nothing to keep in sync.
           ssh -i ~/.ssh/deploy_key \
-              -o IdentitiesOnly=yes -o ConnectTimeout=20 \
+              -o IdentitiesOnly=yes -o ConnectTimeout=20 -p "$DEPLOY_PORT" \
               "$DEPLOY_USER@$DEPLOY_HOST" \
               "APP_DIR='$APP_DIR' RELEASE='${{ github.sha }}' bash -s" < scripts/activate.sh
 
