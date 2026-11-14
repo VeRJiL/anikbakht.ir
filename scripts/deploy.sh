@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
 #
-# Deploy anikbakht.com.
+# Deploy anikbakht.com the self-contained way: the server fetches the commit
+# and builds it itself.
 #
-# This runs ON the server. Two ways in:
-#   - automatically, piped over SSH by .github/workflows/deploy.yml
-#   - by hand:  ssh japs 'bash -s' < scripts/deploy.sh
+# NOT the normal path. CI builds on the runner and ships the result, which is
+# faster and means the bytes tested are the bytes served - see
+# .github/workflows/deploy.yml and scripts/activate.sh.
+#
+# Keep this for when you need a deploy without CI: a runner outage, a hotfix
+# from a laptop, or rebuilding the box from scratch. Note that it needs the
+# server to reach GitHub, which has been unreliable from this host - if the
+# fetch hangs, use the CI path or upload a build with activate.sh instead.
+#
+#   ssh japs 'bash -s' < scripts/deploy.sh
 #
 # nginx serves static files straight out of $APP_DIR/build, so a deploy is
 # "get the new commit, build it, swap the directory". The build goes into a

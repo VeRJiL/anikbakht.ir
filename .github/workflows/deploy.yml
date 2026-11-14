@@ -1,18 +1,25 @@
 name: Deploy
 
-# Every push to main is built here first. Only if that build succeeds do we
-# touch the server, so a compile error can never reach production.
+# Push to main -> build here -> ship the built files to the server -> verify.
+#
+# The site is built once, on the runner, and the resulting directory is what
+# gets shipped. The server never fetches from GitHub and never runs a build,
+# so the bytes verified in CI are exactly the bytes served, and a GitHub
+# outage cannot strand a deploy halfway through.
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch: # lets you redeploy by hand from the Actions tab
+  workflow_dispatch: # redeploy by hand from the Actions tab
 
 # Never let two deploys race each other onto the same box.
 concurrency:
   group: deploy-production
   cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -32,10 +39,33 @@ jobs:
 
       - name: Check the build produced what we expect
         run: |
+          set -euo pipefail
           test -s build/index.html
           test -s build/Arash-Nikbakht-CV.pdf
           ls build/assets/index-*.js >/dev/null
+
+          # Every asset the page references must actually exist in the build.
+          # index.html names only the entry css/js; hashed images are referenced
+          # from inside the bundle, so both get scanned.
+          # A typo'd path or a file that silently failed to copy would
+          # otherwise only show up as a 404 in production.
+          missing=0
+          for rel in $(grep -ohE 'assets/[A-Za-z0-9@._-]+\.(js|css|jpg|jpeg|png|svg|webp|woff2)' build/index.html build/assets/*.js 2>/dev/null | sort -u); do
+            if [ ! -f "build/$rel" ]; then echo "::error::referenced but missing: $rel"; missing=1; fi
+          done
+          [ "$missing" -eq 0 ]
+
           echo "build ok: $(find build -type f | wc -l) files"
+
+      # Hand the exact built directory to the deploy job rather than
+      # rebuilding it there.
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: build/
+          retention-days: 7
+          if-no-files-found: error
 
   deploy:
     name: Deploy to production
@@ -49,25 +79,54 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy over SSH
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: build
+
+      - name: Set up the deploy key
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'japs.ir' }}
-          DEPLOY_USER: ${{ vars.DEPLOY_USER || 'root' }}
         run: |
-          test -n "$DEPLOY_KEY" || { echo "::error::DEPLOY_SSH_KEY secret is not set"; exit 1; }
-
+          set -euo pipefail
+          test -n "$DEPLOY_KEY" || {
+            echo "::error::DEPLOY_SSH_KEY secret is not set - see scripts/activate.sh header"
+            exit 1
+          }
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
-          # Pipe the script in over stdin so the server always runs the deploy
-          # logic from the commit being deployed - nothing to keep in sync.
+      - name: Upload the build to the server
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'japs.ir' }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER || 'root' }}
+          APP_DIR: ${{ vars.DEPLOY_APP_DIR || '/root/anikbakht.ir' }}
+        run: |
+          set -euo pipefail
+          # Streamed as a tarball so the whole release lands in one connection
+          # and needs nothing installed on the server beyond tar.
+          tar czf - -C build . | ssh -i ~/.ssh/deploy_key \
+            -o IdentitiesOnly=yes -o ConnectTimeout=20 \
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            "set -e; cd '$APP_DIR'; rm -rf build.new; mkdir -p build.new; tar xzf - -C build.new"
+
+      - name: Activate and verify
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'japs.ir' }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER || 'root' }}
+          APP_DIR: ${{ vars.DEPLOY_APP_DIR || '/root/anikbakht.ir' }}
+        run: |
+          set -euo pipefail
+          # Piped over stdin so the server always runs the activation logic
+          # from the commit being deployed - nothing to keep in sync.
           ssh -i ~/.ssh/deploy_key \
-              -o IdentitiesOnly=yes \
-              -o ConnectTimeout=20 \
-              "$DEPLOY_USER@$DEPLOY_HOST" 'bash -s' < scripts/deploy.sh
+              -o IdentitiesOnly=yes -o ConnectTimeout=20 \
+              "$DEPLOY_USER@$DEPLOY_HOST" \
+              "APP_DIR='$APP_DIR' RELEASE='${{ github.sha }}' bash -s" < scripts/activate.sh
 
       - name: Remove the key from the runner
         if: always()
